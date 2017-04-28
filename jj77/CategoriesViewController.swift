@@ -183,13 +183,15 @@ class CategoriesViewController: UIViewController,UITableViewDelegate, UITableVie
         self.selectedCategory=self.catDB[indexPath.row]
         self.selectedcatid=self.catsId[indexPath.row]
         let ac = UIAlertController(title: "Title", message: "please choose the observation type", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Customize", style: .default) { (_) in
-            //presentViewController(yourSetupController, animated: true, completion: nil)
-            self.customizingView.isHidden=false
-            
-        }
+//        let okAction = UIAlertAction(title: "cancel", style: .default) { (_) in
+//            //presentViewController(yourSetupController, animated: true, completion: nil)
+//            self.customizingView.isHidden=false
+//            
+//        }
+        let okAction=UIAlertAction(title:"Cancel",style:UIAlertActionStyle.cancel,handler:nil)
+        //ac.addAction(cancel)
         ac.addAction(okAction)
-        let cancelAction = UIAlertAction(title: "Default", style: .default) { (_) in
+        let cancelAction = UIAlertAction(title:"OK", style: .default) { (_) in
             self.performSegue(withIdentifier: "pageWithTasks", sender: self)
             //print("Hello")
             //            let storyboardid = UIStoryboard(name: "categoriesBoard1", bundle: nil)
