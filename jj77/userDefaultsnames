@@ -1,0 +1,16 @@
+1)launchedBefore-bool
+2)UserName-String
+3)Email-String
+4)FirstTimeLogin-int
+5)addedcategory-int
+6)observedfileNamesarray-[String]()
+7)categoryNamestoDisplayinSection-[String]()
+
+//8)filenametoshow-string
+//9)catnametoshow-string
+
+10)observeddatawhole-[[String: String]]()
+11)observeddatatoAddtowhole-[[String: String]]()
+12)doneobserving-bool
+13)firstObser-bool
+//14)fileLocation-url
