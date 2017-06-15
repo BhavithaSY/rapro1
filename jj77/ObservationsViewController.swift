@@ -2,13 +2,25 @@
 //  ObservationsViewController.swift
 //  jj77
 //
-//  Created by Bhavithasai yendrathi on 2/23/17.
-//  Copyright © 2017 Bhavithasai yendrathi. All rights reserved.
+//  This tool was created by Bhavithasai Yendrathi on 2/23/17, in collboration with Dr. Steven C. Sutherland at the University of Houston-Clear Lake and Dr. Farzan Sasangohar at Texas A&M University. This project was funded by an internal grant from the University of Houston-Clear Lake.
+//  Copyright © 2017 Univerity of Houston-Clear Lake. All rights reserved.
 //
 
 import UIKit
+//for emailing
+import MessageUI
 
 class ObservationsViewController: UIViewController,UITableViewDelegate,UITableViewDataSource{
+    
+    
+       
+    
+    @IBAction func emailAction(_ sender: Any) {
+        
+        //tabBarController?.selectedIndex=1
+
+    }
+    
     
     @IBOutlet weak var addNewObservation: UIButton!
     
@@ -16,7 +28,7 @@ class ObservationsViewController: UIViewController,UITableViewDelegate,UITableVi
     
     var filename=String()
     var categoryName=String()
-    
+    var filesurls=[URL]()
     var fileningtoshow=[String]()
     var categorytoshoe=[String]()
     
@@ -59,9 +71,9 @@ class ObservationsViewController: UIViewController,UITableViewDelegate,UITableVi
             //print("all the files are \(directoryContents)")
             
 //            // if you want to filter the directory contents you can do like this:
-            let csv = directoryContents.filter{ $0.pathExtension == "csv" }
-           // print("csv urls:",csv)
-            fileningtoshow = csv.map{ $0.deletingPathExtension().lastPathComponent }
+            filesurls = directoryContents.filter{ $0.pathExtension == "csv" }
+           print("csv urls:",filesurls)
+            fileningtoshow = filesurls.map{ $0.deletingPathExtension().lastPathComponent }
             observationtable.reloadData()
             print("mp3 list:", fileningtoshow)
             
@@ -70,93 +82,7 @@ class ObservationsViewController: UIViewController,UITableViewDelegate,UITableVi
         }
         
         
-//        //getting all the categories
-//        let email=UserDefaults.standard.string(forKey: "Email")!
-//        let firstTimeLogin=UserDefaults.standard.integer(forKey: "FirstTimeLogin")
-//        let addedcat=UserDefaults.standard.integer(forKey: "addedcategory")
-//        // print("addedcat\(self.addedcat)")
-//        //print(email)
-//        //print(firstTimeLogin)
-//        //        if firstTimeLogin == 1
-//        //        {
-//        // here fetch the categories and subtitle form database categories default table
-//        
-//        let request = NSMutableURLRequest(url:NSURL(string:"http://localhost:8888/PHP/DataCollection/categoriesData.php")! as URL)
-//        request.httpMethod="POST"
-//        //print(self.firstTimeLogin)
-//        
-//        let postString = "email=\(email)&firstLogin=\(firstTimeLogin)&addcat=\(addedcat)"
-//        request.httpBody = postString.data(using: String.Encoding.utf8)
-//        let task = URLSession.shared.dataTask(with: request as URLRequest){
-//            data, response, error in
-//            if error == nil
-//                
-//            {
-//                print("entered error is nil")
-//                DispatchQueue.main.async (execute: { () -> Void in
-//                    
-//                    do {
-//                        //get json result
-//                        //print("entered do")
-//                        //print(data)
-//                        let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [[String:String]]
-//                        //assign json to new var parsejson in secured way
-//                        guard json != nil else
-//                        {
-//                            print("error")
-//                            return
-//                        }
-//                        
-//                        //print(json)
-//                        //print(json?.count)
-//                        if(firstTimeLogin==1 && addedcat==2)
-//                        {
-//                            self.catDb.removeAll()
-//                            self.catsubsDb.removeAll()
-//                        }
-//                        else
-//                        {
-//                            self.catDb=["Usability Study ","Focus Groups","Dynamic systems observations"]
-//                            self.catsubsDb=["Testing the usage of each developed product","REquirements gathering observations","Testing the products in mobile environment"]
-//                        }
-//                        
-//                        print(self.catDb)
-//                        for var i in 0 ..< (json?.count)!
-//                        {
-//                            self.catDb.append((json?[i]["CName"]!)!)
-//                        }
-//                        for var i in 0 ..< (json?.count)!
-//                        {
-//                            self.catsubsDb.append((json?[i]["Csubtitle"]!)!)
-//                        }
-//                        print("table data\(self.catDb)")
-//                        self.noofsections=self.catDb.count
-//                        self.observationtable.reloadData()
-//                        // self.CategoriesTable.reloadData()
-//                        
-//                        
-//                    }catch
-//                    {
-//                        print("error: \(error)")
-//                    }
-//                    //print("response = \(response)")
-//                    let responseString = NSString(data: data!,encoding:String.Encoding.utf8.rawValue)
-//                    // print("response string = \(responseString!)")
-//                    
-//                })
-//                
-//                
-//            }
-//            else
-//            {
-//                
-//                return
-//            }
-//        }//task closing
-//        task.resume()
-//        
-//
-        
+      
 
     }
 
@@ -208,7 +134,11 @@ class ObservationsViewController: UIViewController,UITableViewDelegate,UITableVi
 //        
 //    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "celliu", for: indexPath)
+        //let cell = tableView.dequeueReusableCell(withIdentifier: "celliu", for: indexPath)
+       let cell=Bundle.main.loadNibNamed("AllObservationsTableViewCell", owner: self, options: nil)?.first as! AllObservationsTableViewCell
+        cell.email.tag=indexPath.row
+        cell.email.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        
         if(!(self.fileningtoshow.isEmpty))
         {
         cell.textLabel?.text=self.fileningtoshow[indexPath.row]
@@ -217,9 +147,43 @@ class ObservationsViewController: UIViewController,UITableViewDelegate,UITableVi
         return cell
     }
     
+   
+    //emailing functionality goes here
     
+    func buttonTapped(_ sender : UIButton){
+        let buttonTag = sender.tag
+        print(buttonTag)
+        print("e")
+        let urlpaths=filesurls[buttonTag]
+        print("file url is \(filesurls[buttonTag])")
+        
+        // Generating the email controller.
+        if( MFMailComposeViewController.canSendMail() ) {
+            print("Can send email.")
+            
+            let mailComposer = MFMailComposeViewController()
+            mailComposer.mailComposeDelegate = self as! MFMailComposeViewControllerDelegate
+            
+            //Set the subject and message of the email
+            mailComposer.setSubject("Have you heard a swift?")
+            mailComposer.setMessageBody("This is what they sound like.", isHTML: false)
+            
+            let filePath = filesurls[buttonTag].path
+            
+            print("File path loaded.")
+            
+            if let fileData = NSData(contentsOfFile: filePath) {
+                print("File data loaded.")
+                mailComposer.addAttachmentData(fileData as Data, mimeType: "text/csv", fileName: fileningtoshow[buttonTag])
+            }
+            
+        self.present(mailComposer, animated: true, completion: nil)
+    }
+    }
     
-    
+    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+        self.dismiss(animated: true, completion: nil)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

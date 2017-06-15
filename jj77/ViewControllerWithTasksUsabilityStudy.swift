@@ -9,6 +9,24 @@
 import UIKit
 
 class ViewControllerWithTasksUsabilityStudy: UIViewController,UITableViewDelegate,UITableViewDataSource,addtaskonclick {
+    
+    @IBAction func feedbackaction(_ sender: Any) {
+        
+        
+        let url = URL(string: "https://www.google.com")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+            //If you want handle the completion block than
+            UIApplication.shared.open(url!, options: [:], completionHandler: { (success) in
+                print("Open url : \(success)")
+            })
+        }
+    }
+    
+    
+    
+    
+    
     var nameofObservation=String()
     
     var dataobservedtoadd=[[String:String]]()
